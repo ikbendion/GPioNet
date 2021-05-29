@@ -17,8 +17,7 @@ api = Api(app)
 
 ### users ###
 users = {
-    "dion": generate_password_hash("password"),
-    "node1": generate_password_hash("passwordnode1")
+    "user": generate_password_hash("password"),
 }
 ### authentication ###
 @auth.verify_password
@@ -26,10 +25,6 @@ def verify_password(username, password):
     if username in users and \
             check_password_hash(users.get(username), password):
         return username
-@app.route('/')
-@auth.login_required
-def index():
-    return "User, {} Sucsessfully authenticated".format(auth.current_user())
 ### authentication ###
 
 
@@ -38,12 +33,10 @@ def index():
 
 
 class systemdata(Resource):
-    @app.route('/systemdata')
-    @auth.login_required
-    def get(self):
-        total, used, free = shutil.disk_usage("/")
-        hdd = free//(2**30)
-        payload = json.dumps({'system-name': socket.gethostname(), 'cpu': psutil.cpu_percent(), 'mem': psutil.virtual_memory().percent, 'disk': hdd })
+    @app.route('/systemdata') ## app route indication
+    @auth.login_required ### require authentication
+    def get():
+        payload = 'ok'
         return payload
 
 ### Api resources
