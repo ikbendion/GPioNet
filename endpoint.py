@@ -9,6 +9,8 @@ import socket
 import shutil
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+
+
 ### setup ###
 auth = HTTPBasicAuth()
 app = Flask(__name__)
@@ -29,18 +31,33 @@ def verify_password(username, password):
 
 
 
-### Api resources
+### Api endpoints
 
+class setpin(Resource):
+    @app.route('/setpin') ## app route indication
+    @auth.login_required ### require authentication
+    def post(pin,state):
+        pin = request.args.get('pin')
+        state = request.args.get('state')
+        if pin or state is None:
+            return 'Missing details!'
+        print("Pin number is "+str(pin))
+        payload = 'ok'
+        return payload
 
-class systemdata(Resource):
-    @app.route('/systemdata') ## app route indication
+class getpin(Resource):
+    @app.route('/getpin') ## app route indication
     @auth.login_required ### require authentication
     def get():
         payload = 'ok'
         return payload
 
+### Api endpoints
+
+
 ### Api resources
-api.add_resource(systemdata, '/systemdata') # Route_1
+api.add_resource(setpin, '/setpin') # Change pin status
+api.add_resource(getpin, '/getpin') # read the state of a pin 
 ### Api resources
 
 ### Main entrypoint
