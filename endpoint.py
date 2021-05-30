@@ -4,39 +4,32 @@ from flask_httpauth import HTTPBasicAuth
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 ### setup ###
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
-### setup ###
 
-### users ###
+### users, Yes. this SHOULD NOT be hardcoded into the code. will fix this before production use :-)
 users = {
     "user": generate_password_hash("password"),
 }
-### authentication ###
+### authentication
 @auth.verify_password
 def verify_password(username, password):
     if username in users and \
             check_password_hash(users.get(username), password):
         return username
-### authentication ###
 
 
 
 ### Api endpoints
-
 class setpin(Resource):
     @app.route('/setpin') ## app route indication
     @auth.login_required ### require authentication
-    def post(pin,state):
+    def post(self):
         pin = request.args.get('pin')
         state = request.args.get('state')
-        print(pin+str(pin)+" State"+str(state))
-        if pin or state is None:
-            return 'Missing details!'
-        print("Pin number is "+str(pin))
+        print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
         try:
             print("ok")
             # PI code #
@@ -47,18 +40,16 @@ class setpin(Resource):
 class getpin(Resource):
     @app.route('/getpin') ## app route indication
     @auth.login_required ### require authentication
-    def get(pin):
+    def get():
         pin = request.args.get('pin')
-        payload = 'ok'
+        # pi code #
+        state = 'HIGH'
+        payload = pin+' = '+state
         return payload
-
-### Api endpointss
-
 
 ### Api resources
 api.add_resource(setpin, '/setpin') # Change pin status
 api.add_resource(getpin, '/getpin') # read the state of a pin 
-### Api resources
 
 ### Main entrypoint
 app.run(port='5002')
