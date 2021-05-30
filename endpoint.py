@@ -1,12 +1,6 @@
-import psycopg2
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
-import json
-from datetime import datetime
-import psutil
-import socket
-import shutil
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -39,20 +33,26 @@ class setpin(Resource):
     def post(pin,state):
         pin = request.args.get('pin')
         state = request.args.get('state')
+        print(pin+str(pin)+" State"+str(state))
         if pin or state is None:
             return 'Missing details!'
         print("Pin number is "+str(pin))
-        payload = 'ok'
-        return payload
+        try:
+            print("ok")
+            # PI code #
+        except:
+            return 400
+        return 200
 
 class getpin(Resource):
     @app.route('/getpin') ## app route indication
     @auth.login_required ### require authentication
-    def get():
+    def get(pin):
+        pin = request.args.get('pin')
         payload = 'ok'
         return payload
 
-### Api endpoints
+### Api endpointss
 
 
 ### Api resources
