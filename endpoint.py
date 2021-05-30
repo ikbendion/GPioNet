@@ -33,11 +33,16 @@ class setpin(Resource):
     def post(pin,state):
         pin = request.args.get('pin')
         state = request.args.get('state')
+        print(pin+str(pin)+" State"+str(state))
         if pin or state is None:
             return 'Missing details!'
         print("Pin number is "+str(pin))
-        payload = 'ok'
-        return payload
+        try:
+            print("ok")
+            # PI code #
+        except:
+            return 400
+        return 200
 
 class getpin(Resource):
     @app.route('/getpin') ## app route indication

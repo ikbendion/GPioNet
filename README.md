@@ -1,4 +1,4 @@
-# Raspberry Pi Flask GPIO API
+# GPioNet
 
 GpioNet is a python flask application designed to remotely control GPIO pins with a API request
 
