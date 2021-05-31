@@ -28,7 +28,7 @@ def verify_password(username, password):
 class setpin(Resource):
     @app.route('/setpin') ## app route indication
     @auth.login_required ### require authentication
-    def post(self):
+    def post():
         pin = request.args.get('pin')
         state = request.args.get('state')
         print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
@@ -36,10 +36,10 @@ class setpin(Resource):
             print("ok")
             # PI code #
             pin_state = "GPIO."+state
-            GPIO.output(pin, pin_state)
+            GPIO.output(int(pin), tuple(pin_state))
         except:
-            return 400
-        return 200
+            return 'not ok'
+        return 'ok'
 
 class getpin(Resource):
     @app.route('/getpin') ## app route indication
