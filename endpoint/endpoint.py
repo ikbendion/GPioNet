@@ -34,9 +34,8 @@ class setpin(Resource):
         print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
         print("ok")
         # PI code #
-        pin_state = "GPIO."+state
         GPIO.setup(int(pin), GPIO.OUT)
-        GPIO.output(int(pin), pin_state)
+        GPIO.output(int(pin), int(state))
         return 'ok'
 
 class getpin(Resource):
