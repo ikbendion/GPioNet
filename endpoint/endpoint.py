@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
@@ -8,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
+GPIO.setmode(GPIO.BOARD)
 
 ### users, Yes. this SHOULD NOT be hardcoded into the code. will fix this before production use :-)
 users = {
@@ -33,6 +35,8 @@ class setpin(Resource):
         try:
             print("ok")
             # PI code #
+            pin_state = "GPIO."+state
+	    GPIO.output(pin, pin_state)
         except:
             return 400
         return 200
@@ -43,8 +47,8 @@ class getpin(Resource):
     def get():
         pin = request.args.get('pin')
         # pi code #
-        state = 'HIGH'
-        payload = pin+' = '+state
+	state = GPIO.input(pin)
+        payload = str(pin)+' = '+str(state)
         return payload
 
 ### Api resources
@@ -52,4 +56,4 @@ api.add_resource(setpin, '/setpin') # Change pin status
 api.add_resource(getpin, '/getpin') # read the state of a pin 
 
 ### Main entrypoint
-app.run(port='5002')
+app.run(port='5002',host='10.0.1.169')
