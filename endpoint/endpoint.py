@@ -47,7 +47,7 @@ class getpin(Resource):
     def get():
         pin = request.args.get('pin')
         # pi code #
-        GPIO.setup(pin, GPIO.OUT)
+        GPIO.setup(int(pin), GPIO.OUT)
         state = GPIO.input(int(pin))
         payload = str(pin)+' = '+str(state)
         return payload
