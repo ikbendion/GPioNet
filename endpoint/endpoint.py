@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
@@ -8,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
+GPIO.setmode(GPIO.BOARD)
 
 ### users, Yes. this SHOULD NOT be hardcoded into the code. will fix this before production use :-)
 users = {
@@ -26,16 +28,15 @@ def verify_password(username, password):
 class setpin(Resource):
     @app.route('/setpin') ## app route indication
     @auth.login_required ### require authentication
-    def post(self):
+    def post():
         pin = request.args.get('pin')
         state = request.args.get('state')
         print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
-        try:
-            print("ok")
-            # PI code #
-        except:
-            return 400
-        return 200
+        print("ok")
+        # PI code #
+        GPIO.setup(int(pin), GPIO.OUT)
+        GPIO.output(int(pin), int(state))
+        return 'ok'
 
 class getpin(Resource):
     @app.route('/getpin') ## app route indication
@@ -43,8 +44,9 @@ class getpin(Resource):
     def get():
         pin = request.args.get('pin')
         # pi code #
-        state = 'HIGH'
-        payload = pin+' = '+state
+        GPIO.setup(int(pin), GPIO.OUT)
+        state = GPIO.input(int(pin))
+        payload = str(pin)+' = '+str(state)
         return payload
 
 ### Api resources
@@ -52,4 +54,4 @@ api.add_resource(setpin, '/setpin') # Change pin status
 api.add_resource(getpin, '/getpin') # read the state of a pin 
 
 ### Main entrypoint
-app.run(port='5002')
+app.run(port='5002',host='10.0.1.169')
