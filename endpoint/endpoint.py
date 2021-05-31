@@ -36,7 +36,7 @@ class setpin(Resource):
             print("ok")
             # PI code #
             pin_state = "GPIO."+state
-	        GPIO.output(pin, pin_state)
+            GPIO.output(pin, pin_state)
         except:
             return 400
         return 200
