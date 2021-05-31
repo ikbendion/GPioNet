@@ -32,13 +32,10 @@ class setpin(Resource):
         pin = request.args.get('pin')
         state = request.args.get('state')
         print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
-        try:
-            print("ok")
-            # PI code #
-            pin_state = "GPIO."+state
-            GPIO.output(int(pin), tuple(pin_state))
-        except:
-            return 'not ok'
+        print("ok")
+        # PI code #
+        pin_state = "GPIO."+state
+        GPIO.output(int(pin), tuple(pin_state))
         return 'ok'
 
 class getpin(Resource):
