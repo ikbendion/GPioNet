@@ -10,7 +10,7 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
 GPIO.setmode(GPIO.BOARD)
-
+GPIO.setwarnings(False)
 ### users, Yes. this SHOULD NOT be hardcoded into the code. will fix this before production use :-)
 users = {
     "user": generate_password_hash("password"),
@@ -28,15 +28,13 @@ def verify_password(username, password):
 class setpin(Resource):
     @app.route('/setpin') ## app route indication
     @auth.login_required ### require authentication
-    def post():
+    def post(self):
         pin = request.args.get('pin')
         state = request.args.get('state')
-        print("pin >> "+str(pin)+'\n'+"State >> "+str(state))
-        print("ok")
-        # PI code #
+        print(state+pin)
         GPIO.setup(int(pin), GPIO.OUT)
         GPIO.output(int(pin), int(state))
-        return 'ok'
+        return 200
 
 class getpin(Resource):
     @app.route('/getpin') ## app route indication
